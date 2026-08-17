@@ -1,0 +1,201 @@
+{
+  "name": "Sub - Enviar email mejorado con AI - Ejercicio en Clase 2 - Curso Coderhouse - IA Automation avanzado - Arquitectura Multi-agent",
+  "nodes": [
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "models/gemini-3-flash-preview"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Actuá como especialista en email marketing y redacción publicitaria para una dietética de productos naturales.\n\nVas a recibir los siguientes datos:\n\n- nombre: {{ $('Start').item.json.body_nombre }}\n- apellido: {{ $('Start').item.json.body_apellido }}\n- mensaje: {{ $('Start').item.json.body_message }}\n\nTu tarea es transformar el mensaje base en un email publicitario atractivo, claro y profesional.\n\n### Reglas de contenido\n\n1. Personalizá el saludo utilizando el nombre del destinatario.\n2. Mejorá la redacción del mensaje original para que resulte más atractiva comercialmente, manteniendo siempre su significado.\n3. No inventes precios, promociones, descuentos, productos, beneficios ni información que no esté incluida en el mensaje recibido.\n4. Utilizá un tono cercano, saludable, confiable y profesional.\n5. Evitá exageraciones comerciales y textos demasiado extensos.\n6. Incluí un llamado a la acción claro relacionado con el contenido del mensaje.\n7. El email debe transmitir una identidad vinculada con alimentación saludable, productos naturales y bienestar.\n\n### Estética visual\n\nDiseñá el email inspirado en la estética de la imagen de referencia proporcionada.\n\nLa identidad visual debe transmitir:\n\n* Dietética moderna y premium.\n* Productos naturales y artesanales.\n* Paleta de tonos crema, beige, blanco cálido, marrón cacao y pequeños detalles en verde natural.\n* Diseño limpio y elegante.\n* Buena cantidad de espacio en blanco.\n* Tipografía visualmente sobria y fácil de leer.\n* Botones con estilo simple, elegante y relacionado con la estética natural.\n* Evitar colores estridentes, diseños tecnológicos o apariencia genérica de newsletter.\n\n### Formato HTML\n\nDevolvé un email completo en HTML preparado para ser enviado desde una automatización.\n\nRequisitos técnicos:\n\n* Utilizá HTML compatible con clientes de correo como Gmail y Outlook.\n* Utilizá tablas para la estructura principal cuando sea necesario.\n* Utilizá estilos CSS inline.\n* No utilices JavaScript.\n* No utilices archivos CSS externos.\n* El diseño debe adaptarse correctamente a dispositivos móviles.\n* Ancho máximo aproximado del contenido: 600 px.\n* Incluí una cabecera visual con el nombre de la dietética.\n* Incluí saludo personalizado.\n* Incluí el mensaje comercial mejorado.\n* Incluí un botón de llamada a la acción.\n* Incluí un footer sencillo y discreto.\n\nIMPORTANTE:\n\nDevolvé **únicamente el código HTML final**.\n\nNo agregues explicaciones.\nNo utilices Markdown.\nNo coloques el HTML dentro de bloques ```html.\nNo inventes datos que no hayan sido proporcionados.\n\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        704,
+        128
+      ],
+      "id": "a080c801-77a2-4d82-9681-b20e9674be53",
+      "name": "Message a model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "wVaHGoeHNguVJj6X",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Start').item.json.body_email }}",
+        "subject": "Nuevas promos dietetica callao",
+        "message": "={{ $json.content.parts[0].text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1056,
+        112
+      ],
+      "id": "ceab04a6-a059-407b-8181-6d8791eb6da0",
+      "name": "Send a message",
+      "webhookId": "e0097077-c3c5-4e00-8cff-af28792c34b5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gBVWBbxuSy0NN37n",
+          "name": "Gmail Curso Coder AI Avanzado"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "body_apellido",
+              "type": "any"
+            },
+            {
+              "name": "body_message",
+              "type": "any"
+            },
+            {
+              "name": "body_nombre",
+              "type": "any"
+            },
+            {
+              "name": "body_email",
+              "type": "any"
+            }
+          ]
+        }
+      },
+      "id": "81f257af-4db8-4d5d-8a52-49707596bf90",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        496,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"estado\": \"error\",\n  \"mensaje\": \"fallo el conectarme a la IA\",\n  \"data\": \"\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1072,
+        368
+      ],
+      "id": "db26c4d4-139c-4aa0-ae85-775aafc45a61",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"estado\": \"exitoso\",\n  \"mensaje\": \"email enviado correctamente\",\n  \"data\": \"\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1360,
+        112
+      ],
+      "id": "c6b124dc-42ba-4b78-bcc9-89ffea9e2cc4",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"estado\": \"error\",\n  \"mensaje\": \"fallo al enviar un email\",\n  \"data\": \"\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1360,
+        256
+      ],
+      "id": "1fba7e82-746e-43f5-a1e7-0f5540e21076",
+      "name": "Edit Fields2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Message a model1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "569c67c0-43bf-4db4-a9c2-bc53e3475b7b",
+  "meta": {
+    "instanceId": "a5021e5094d98686b971b461b3de3ef04addf5d64b4bdfca195b575fd6f15558"
+  },
+  "id": "JLwUUpBVbz1n6TYq",
+  "tags": []
+}
